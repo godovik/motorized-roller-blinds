@@ -9,21 +9,33 @@ class RollerBlindInterface {
     GyverHub* hub;
     RollerBlind* rollerBlind;
 
-    GHbutton btn_up;
-    GHbutton btn_down;
-    GHbutton btn_stop;
-    GHbutton btn_reverse;
-    GHbutton btn_reset;
-    GHbutton btn_calibrate;
-    GHbutton btn_use_hall;
-    GHbutton btn_connect;
-    GHbutton btn_open;
-    GHbutton btn_close;
+    GHbutton 
+      btn_up,
+      btn_down,
+      btn_stop,
+      btn_reverse,
+      btn_reset,
+      btn_calibrate,
+      btn_use_hall,
+      btn_connect,
+      btn_open,
+      btn_close;
 
-    bool opened, top_position_hall, motor_spin_hall;
+    bool 
+      opened,
+      top_position_hall,
+      motor_spin_hall;
 
-    short percent_position, percent_max_position;
-    short length, direction, position, target_position, reversed, calibration_status;
+    short 
+      length,
+      direction,
+      position,
+      target_position,
+      reversed,
+      calibration_status,
+      percent_position,
+      percent_min_position,
+      percent_max_position;
 
     String getDirection() {
       if (this->direction == DIRECTION_UP) {
@@ -44,13 +56,13 @@ class RollerBlindInterface {
 
     String getCalibrationStatus() {
       if (this->calibration_status == CALIBRATED_YES) {
-        return "CALIBRATED_YES";
+        return "calibrated";
       }
       if (this->calibration_status == CALIBRATED_NO) {
-        return "CALIBRATED_NO";
+        return "not calubrated";
       }
       if (this->calibration_status == CALIBRATING) {
-        return "CALIBRATING";
+        return "calibrating";
       }
       return "error";
     }
@@ -145,18 +157,26 @@ class RollerBlindInterface {
 
     void drawControlPanel() {
       this->hub->BeginWidgets();
+
+      this->hub->WidgetSize(100);
       if (this->hub->Slider_(F("percent_position"), &this->percent_position, GH_UINT16, F(SLIDER_OPEN_PERCENT), 0, 100, 1)) {
         this->rollerBlind->setPercentPosition(this->percent_position);
+      }
+
+      if (this->hub->Slider_(F("percent_min_position"), &this->percent_min_position, GH_UINT16, F(SLIDER_MIN_OPEN_PERCENT), 0, 99, 1)) {
+        this->rollerBlind->setPercentMinPosition(this->percent_min_position);
       }
 
       if (this->hub->Slider_(F("percent_max_position"), &this->percent_max_position, GH_UINT16, F(SLIDER_MAX_OPEN_PERCENT), 1, 100, 1)) {
         this->rollerBlind->setPercentMaxPosition(this->percent_max_position);
       }
+
       this->hub->WidgetSize(33);
       this->hub->Button_(F("open"), &this->btn_open, F("open"));
       this->hub->Button_(F("stop"), &this->btn_stop, F("stop"));
       this->hub->Button_(F("close"), &this->btn_close, F("close"));
       this->hub->EndWidgets();
+
       if (this->hub->Dummy_("opened", &this->opened, GH_INT8)) {
         if (this->opened) {
           this->rollerBlind->open();
@@ -185,14 +205,21 @@ class RollerBlindInterface {
     void readValues() {
       this->length = this->rollerBlind->getLength();
       this->direction = this->rollerBlind->getDirection();
-      this->position = this->rollerBlind->getCurrent();
       this->target_position = this->rollerBlind->getTarget();
       this->reversed = this->rollerBlind->getReversed();
       this->calibration_status = this->rollerBlind->getCalibrationStatus();
       this->opened = this->rollerBlind->isOpened();
+
+      this->position = this->rollerBlind->getCurrent();
+      this->percent_position = this->rollerBlind->getPercentPosition();
+      this->percent_min_position = this->rollerBlind->getPercentMinPosition();
+      this->percent_max_position = this->rollerBlind->getPercentMaxPosition();
     }
 
     void updateAll() {
+      this->hub->sendUpdate("percent_position", String(this->percent_position));
+      this->hub->sendUpdate("percent_min_position", String(this->percent_min_position));
+      this->hub->sendUpdate("percent_max_position", String(this->percent_max_position));
       // todo: send only when debug enabled
       this->hub->sendUpdate("position", String(this->position));
       this->hub->sendUpdate("target_position", String(this->target_position));

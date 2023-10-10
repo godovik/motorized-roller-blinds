@@ -41,6 +41,7 @@
 #define MQTT_PARAM_INPUT_SIZE MQTT_PARAM_ZISE - 1
 
 #define SLIDER_OPEN_PERCENT "Position"
+#define SLIDER_MIN_OPEN_PERCENT "Min Position"
 #define SLIDER_MAX_OPEN_PERCENT "Max Position"
 
 #define CONTROL_PANEL "Control Panel"

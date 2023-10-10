@@ -8,12 +8,13 @@ class RollerBlind {
     bool opened, position_set_manually;
     short percent_position, calibration_started_from;
 
-    short length, position, target_position, deg_since_last_spin, percent_max_position;
+    short length, position, target_position, deg_since_last_spin, percent_max_position, percent_min_position;
     EepromSync<short> length_storage               = EepromSync<short>(length);
     EepromSync<short> position_storage             = EepromSync<short>(position);
     EepromSync<short> target_position_storage      = EepromSync<short>(target_position);
     EepromSync<short> deg_since_last_spin_storage  = EepromSync<short>(deg_since_last_spin);
     EepromSync<short> percent_max_position_storage = EepromSync<short>(percent_max_position, { 1, 100, 100 });
+    EepromSync<short> percent_min_position_storage = EepromSync<short>(percent_min_position, { 0, 99, 0 });
 
     short reversed, direction, use_hall_sensor, calibration_status;
     EepromSync<short> reversed_storage           = EepromSync<short>(reversed, { REVERSED_NO, REVERSED_YES, REVERSED_NO });
@@ -56,6 +57,7 @@ class RollerBlind {
       this->target_position_storage.save();
       this->calibration_status_storage.save();
       this->percent_max_position_storage.save();
+      this->percent_min_position_storage.save();
       this->deg_since_last_spin_storage.save_and_commit();
     }
 
@@ -130,6 +132,7 @@ class RollerBlind {
       this->calibration_status_storage.read();
       this->deg_since_last_spin_storage.read();
       this->percent_max_position_storage.read();
+      this->percent_min_position_storage.read();
 
       this->percent_position = max(round((float(this->position) / float(this->length) * 100.0)), 0.0);
 
@@ -241,9 +244,16 @@ class RollerBlind {
       return this->percent_max_position;
     }
 
+    short getPercentMinPosition() {
+      return this->percent_min_position;
+    }
+
     void setPercentPosition(short percent_position) {
       if (percent_position > this->percent_max_position) {
         this->percent_max_position = percent_position;
+      }
+      if (percent_position < this->percent_min_position) {
+        this->percent_min_position = percent_position;
       }
       this->position_set_manually = true;
       this->setTargetPercent(percent_position);
@@ -252,15 +262,29 @@ class RollerBlind {
 
     void setPercentMaxPosition(short percent_max_position) {
       this->percent_max_position = percent_max_position;
+      if (this->percent_max_position <= this->percent_min_position) {
+        this->percent_min_position = this->percent_max_position - 1;
+      }
       if (this->percent_max_position < this->percent_position) {
-        this->setPercentPosition(percent_max_position);
+        this->setPercentPosition(this->percent_max_position);
+      }
+      this->saveAll();
+    }
+
+    void setPercentMinPosition(short percent_min_position) {
+      this->percent_min_position = percent_min_position;
+      if (this->percent_min_position >= this->percent_max_position) {
+        this->percent_max_position = this->percent_min_position + 1;
+      }
+      if (this->percent_min_position > this->percent_position) {
+        this->setPercentPosition(this->percent_min_position);
       }
       this->saveAll();
     }
 
     void open() {
       this->position_set_manually = false;
-      this->setTarget(0);
+      this->setPercentPosition(this->percent_min_position);
       this->saveAll();
     }
 
