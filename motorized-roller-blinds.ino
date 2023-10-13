@@ -1,4 +1,5 @@
 #define ATOMIC_FS_UPDATE // OTA обновление сжатым .gz файлом (вместо .bin)
+#define ROLLER_BLIND_LANG_RU
 
 #include <Arduino.h>
 #include <EEPROM.h>
@@ -10,6 +11,7 @@
 #include <HubMqttSettings.h>
 #include <RollerBlindInterface.h>
 
+// todo: allow ability to rename 
 GyverHub hub(DEVICES_GROUP, NAME, ICON);
 // todo: add page to allow setup from the interface
 GStepper <STEPPER4WIRE> motor(2048, 13, 16, 12, 14);
@@ -26,8 +28,7 @@ void readSettings() {
 }
 
 void build() {
-  // todo: use MAIN_MENU define
-  if (hub.Menu(F("Control panel,WiFi Settings,MQTT Settings"))) {
+  if (hub.Menu(F(MAIN_MENU))) {
     hub.refresh();
   }
 

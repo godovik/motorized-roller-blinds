@@ -46,16 +46,16 @@ class HubMqttSettings {
 
       this->hub->BeginWidgets();
       this->hub->WidgetSize(70);
-      this->hub->Input_(F("mqtt_host"), &this->mqtt_host, GH_CSTR, F("MQTT host"), MQTT_PARAM_INPUT_SIZE);
+      this->hub->Input_(F("mqtt_host"), &this->mqtt_host, GH_CSTR, F(MQTT_HOST_INPUT), MQTT_PARAM_INPUT_SIZE);
       this->hub->WidgetSize(30);
-      this->hub->Input_(F("mqtt_port"), &this->mqtt_port, GH_INT16, F("MQTT port"), 4);
+      this->hub->Input_(F("mqtt_port"), &this->mqtt_port, GH_INT16, F(MQTT_PORT_INPUT), 4);
       this->hub->WidgetSize(100);
-      this->hub->Input_(F("mqtt_login"), &this->mqtt_login, GH_CSTR, F("Login"), MQTT_PARAM_INPUT_SIZE);
-      this->hub->Input_(F("mqtt_pass"),  &this->mqtt_pass, GH_CSTR, F("Password"), MQTT_PARAM_INPUT_SIZE);
+      this->hub->Input_(F("mqtt_login"), &this->mqtt_login, GH_CSTR, F(MQTT_LOGIN_INPUT), MQTT_PARAM_INPUT_SIZE);
+      this->hub->Input_(F("mqtt_pass"),  &this->mqtt_pass, GH_CSTR, F(MQTT_PASS_INPUT), MQTT_PARAM_INPUT_SIZE);
 
       this->hub->WidgetSize(25);
-      this->hub->Button_(F("connect_mqtt"), &this->btn_connect, F("connect mqtt"));
       this->hub->EndWidgets();
+      this->hub->Button_(F("connect_mqtt"), &this->btn_connect, F(BTN_CONNECT));
     }
 
     void connect() {

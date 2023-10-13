@@ -39,11 +39,11 @@ class HubWiFiSettings {
 
       this->hub->BeginWidgets();
       this->hub->WidgetSize(100);
-      this->hub->Input_(F("wifi_ssid"), &this->ap_ssid, GH_CSTR, F("WiFi ssid"), AP_SSID_INPUT_SIZE);
-      this->hub->Input_(F("wifi_pass"), &this->ap_pass, GH_CSTR, F("WiFi password"), AP_PASS_INPUT_SIZE);
+      this->hub->Input_(F("wifi_ssid"), &this->ap_ssid, GH_CSTR, F(WIFI_SSID_INPUT), AP_SSID_INPUT_SIZE);
+      this->hub->Input_(F("wifi_pass"), &this->ap_pass, GH_CSTR, F(WIFI_PASS_INPUT), AP_PASS_INPUT_SIZE);
       this->hub->WidgetSize(25);
-      this->hub->Button_(F("connect"), &this->btn_connect, F("connect"));
       this->hub->EndWidgets();
+      this->hub->Button_(F("connect"), &this->btn_connect, F(BTN_CONNECT));
     }
 
     void connect() {

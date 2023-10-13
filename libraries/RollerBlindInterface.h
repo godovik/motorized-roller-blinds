@@ -24,18 +24,23 @@ class RollerBlindInterface {
     bool 
       opened,
       top_position_hall,
-      motor_spin_hall;
+      motor_spin_hall,
+      show_dedbug_interface = false;
 
     short 
       length,
       direction,
       position,
-      target_position,
       reversed,
       calibration_status,
+      target_position,
       percent_position,
+      stop_btn_click_count = 0,
       percent_min_position,
       percent_max_position;
+      
+    int
+      stop_btn_click_second = 0;
 
     String getDirection() {
       if (this->direction == DIRECTION_UP) {
@@ -68,6 +73,7 @@ class RollerBlindInterface {
     }
 
     void drawDebugInterface() {
+      this->hub->Space(24);
       this->hub->BeginWidgets();
       this->hub->WidgetSize(50);
       this->hub->Label_(F("length"), String(this->length), F("length"));
@@ -99,6 +105,17 @@ class RollerBlindInterface {
       if (this->btn_stop.changed() && this->btn_stop) {
         Serial.println("btn_stop");
         this->rollerBlind->stop();
+
+        int next_stop_btn_click_second = (((millis() / 1000)%3600)%60);
+        if (this->stop_btn_click_second != next_stop_btn_click_second) {
+          this->stop_btn_click_count = 0;
+        }
+        this->stop_btn_click_second = next_stop_btn_click_second;
+        if (++this->stop_btn_click_count == 2) {
+          this->show_dedbug_interface = !this->show_dedbug_interface;
+          this->stop_btn_click_count = 0;
+          this->hub->refresh();
+        }
       }
 
       if (this->btn_reverse.changed() && this->btn_reverse) {
@@ -123,19 +140,17 @@ class RollerBlindInterface {
     }
 
     void drawCalibrationInterface() {
-      drawDebugInterface();
       this->hub->BeginWidgets();
       this->hub->WidgetSize(33);
-      this->hub->Button_(F("up"), &this->btn_up, F("up"));
-      this->hub->Button_(F("down"), &this->btn_down, F("down"));
-      this->hub->Button_(F("stop"), &this->btn_stop, F("stop"));
+      this->hub->Button_(F("up"), &this->btn_up, F(BTN_UP));
+      this->hub->Button_(F("down"), &this->btn_down, F(BTN_DOWN));
+      this->hub->Button_(F("stop"), &this->btn_stop, F(BTN_STOP));
       this->hub->WidgetSize(25);
-      this->hub->Button_(F("reverse"), &this->btn_reverse, F("reverse"));
-      this->hub->Button_(F("reset"), &this->btn_reset, F("reset"), GH_RED);
-      this->hub->Button_(F("calibrate"), &this->btn_calibrate, F("calibrate"), GH_GREEN);
-      this->hub->Button_(F("use hall sensor"), &this->btn_use_hall, F("use_hall"), this->rollerBlind->useHallSensor() ? GH_GREEN : GH_RED);
+      this->hub->Button_(F("reverse"), &this->btn_reverse, F(BTN_REVERSE));
+      this->hub->Button_(F("reset"), &this->btn_reset, F(BTN_RESET), GH_RED);
+      this->hub->Button_(F("calibrate"), &this->btn_calibrate, F(BTN_CALIBRATE), GH_GREEN);
+      this->hub->Button_(F("use hall sensor"), &this->btn_use_hall, F(BTN_USER_HALL), this->rollerBlind->useHallSensor() ? GH_GREEN : GH_RED);
       this->hub->EndWidgets();
-      this->hub->Space(24);
     }
     
     void processControlButtons() {
@@ -159,12 +174,13 @@ class RollerBlindInterface {
       this->hub->BeginWidgets();
 
       this->hub->WidgetSize(100);
-      if (this->hub->Slider_(F("percent_position"), &this->percent_position, GH_UINT16, F(SLIDER_OPEN_PERCENT), 0, 100, 1)) {
-        this->rollerBlind->setPercentPosition(this->percent_position);
-      }
 
       if (this->hub->Slider_(F("percent_min_position"), &this->percent_min_position, GH_UINT16, F(SLIDER_MIN_OPEN_PERCENT), 0, 99, 1)) {
         this->rollerBlind->setPercentMinPosition(this->percent_min_position);
+      }
+
+      if (this->hub->Slider_(F("percent_position"), &this->percent_position, GH_UINT16, F(SLIDER_OPEN_PERCENT), 0, 100, 1)) {
+        this->rollerBlind->setPercentPosition(this->percent_position);
       }
 
       if (this->hub->Slider_(F("percent_max_position"), &this->percent_max_position, GH_UINT16, F(SLIDER_MAX_OPEN_PERCENT), 1, 100, 1)) {
@@ -172,9 +188,9 @@ class RollerBlindInterface {
       }
 
       this->hub->WidgetSize(33);
-      this->hub->Button_(F("open"), &this->btn_open, F("open"));
-      this->hub->Button_(F("stop"), &this->btn_stop, F("stop"));
-      this->hub->Button_(F("close"), &this->btn_close, F("close"));
+      this->hub->Button_(F("open"), &this->btn_open, F(BTN_OPEN));
+      this->hub->Button_(F("stop"), &this->btn_stop, F(BTN_CLOSE));
+      this->hub->Button_(F("close"), &this->btn_close, F(BTN_STOP));
       this->hub->EndWidgets();
 
       if (this->hub->Dummy_("opened", &this->opened, GH_INT8)) {
@@ -265,6 +281,10 @@ class RollerBlindInterface {
 
       if (this->tab == 1 || this->hub->buildRead()) {
         this->drawControlPanel();
+      }
+
+      if (show_dedbug_interface) {
+        drawDebugInterface();
       }
     }
 };

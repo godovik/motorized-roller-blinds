@@ -13,8 +13,8 @@ class RollerBlind {
     EepromSync<short> position_storage             = EepromSync<short>(position);
     EepromSync<short> target_position_storage      = EepromSync<short>(target_position);
     EepromSync<short> deg_since_last_spin_storage  = EepromSync<short>(deg_since_last_spin);
-    EepromSync<short> percent_max_position_storage = EepromSync<short>(percent_max_position, { 1, 100, 100 });
     EepromSync<short> percent_min_position_storage = EepromSync<short>(percent_min_position, { 0, 99, 0 });
+    EepromSync<short> percent_max_position_storage = EepromSync<short>(percent_max_position, { 1, 100, 100 });
 
     short reversed, direction, use_hall_sensor, calibration_status;
     EepromSync<short> reversed_storage           = EepromSync<short>(reversed, { REVERSED_NO, REVERSED_YES, REVERSED_NO });
@@ -62,11 +62,11 @@ class RollerBlind {
     }
 
     void tickCalibration(bool hall_sensor_active) {
-      if (!hall_sensor_active) { // еще не достигли датчика 
-        if (!this->motor->tick()) { // мотор остановился
+      if (!hall_sensor_active) {      // еще не достигли датчика 
+        if (!this->motor->tick()) {   // мотор остановился
           this->up();
         }
-      } else { // достигли датчика
+      } else {                        // достигли датчика
         this->calibrated();
       }
     }
