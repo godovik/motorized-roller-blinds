@@ -172,7 +172,6 @@ class RollerBlindInterface {
 
     void drawControlPanel() {
       this->hub->BeginWidgets();
-
       this->hub->WidgetSize(100);
 
       if (this->hub->Slider_(F("percent_min_position"), &this->percent_min_position, GH_UINT16, F(SLIDER_MIN_OPEN_PERCENT), 0, 99, 1)) {
