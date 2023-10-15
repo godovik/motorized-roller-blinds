@@ -4,7 +4,7 @@
   "name": "motorized-roller-blinds",
   "content": "",
   "created_at": "2023-07-28 11:19:13",
-  "updated_at": "2023-10-15 09:29:12",
+  "updated_at": "2023-10-15 10:10:44",
   "stick": "",
   "documents": [
     {
@@ -206,11 +206,11 @@
         "9f77654394344f25b3de138e0fe05ff6": 1
       },
       "BOM": [],
-      "updateTime": 1697347038,
+      "updateTime": 1697353837,
       "createTime": 1690535104,
       "histories": [],
       "created_at": "2023-07-28 12:05:04",
-      "updated_at": "2023-10-15 08:17:18"
+      "updated_at": "2023-10-15 10:10:37"
     },
     {
       "uuid": "ca1b2377d89c3d64639b4f28eae11265",
@@ -234,11 +234,11 @@
         "70aa5812f21f4991bf427395d51849f4": 1
       },
       "BOM": [],
-      "updateTime": 1697351352,
+      "updateTime": 1697353844,
       "createTime": 1697194372,
       "histories": [],
       "created_at": "2023-10-13 13:52:52",
-      "updated_at": "2023-10-15 09:29:12"
+      "updated_at": "2023-10-15 10:10:44"
     }
   ],
   "sort": [
