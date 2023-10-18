@@ -9,22 +9,24 @@
 #include <EepromSync.h>
 #include <HubWiFiSettings.h>
 #include <HubMqttSettings.h>
+#include <HubMotorSettings.h>
 #include <RollerBlindInterface.h>
 
 // todo: allow ability to rename 
 GyverHub hub(DEVICES_GROUP, NAME, ICON);
-// todo: add page to allow setup from the interface
-GStepper <STEPPER4WIRE> motor(2048, 13, 16, 12, 14);
+GStepper <STEPPER4WIRE, STEPPER_VIRTUAL> motor(2048);
 
 HubWiFiSettings       wifiSettings(&hub);
 HubMqttSettings       mqttSettings(&hub);
-RollerBlind           rollerBlind(&motor);
+HubMotorSettings      motorSettings(&hub);
+RollerBlind           rollerBlind(&motor, &motorSettings);
 RollerBlindInterface  rollerBlindInterface(&hub, &rollerBlind);
 
 
 void readSettings() {
   wifiSettings.read();
   mqttSettings.read();
+  motorSettings.read();
 }
 
 void build() {
@@ -43,6 +45,10 @@ void build() {
       
     case 2:
       mqttSettings.draw();
+      break;
+      
+    case 3:
+      motorSettings.draw();
       break;
   }
 }

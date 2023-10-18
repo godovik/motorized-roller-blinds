@@ -8,10 +8,11 @@
     #define SLIDER_MIN_OPEN_PERCENT "Минимальное положение"
     #define SLIDER_MAX_OPEN_PERCENT "Максимальное положение"
 
-    #define CONTROL_PANEL       "Управление"
-    #define CALIBRATION_PANEL   "Настройка"
-    #define WIFI_SETTINGS_PANEL "Настройки WiFi"
-    #define MQTT_SETTINGS_PANEL "Настройки MQTT"
+    #define CONTROL_PANEL        "Управление"
+    #define CALIBRATION_PANEL    "Настройка"
+    #define WIFI_SETTINGS_PANEL  "Настройки WiFi"
+    #define MQTT_SETTINGS_PANEL  "Настройки MQTT"
+    #define MOTOR_SETTINGS_PANEL "Настройки мотора"
 
     #define BTN_OPEN      "открыть"
     #define BTN_CLOSE     "закрыть"
@@ -23,6 +24,7 @@
     #define BTN_CALIBRATE "откалибровать"
     #define BTN_USER_HALL "use hall" // todo: придумать, короткое название
     #define BTN_CONNECT   "подключиться"
+    #define BTN_SAVE      "сохранить"
 
     #define WIFI_SSID_INPUT "WiFi ssid"
     #define WIFI_PASS_INPUT "WiFi пароль"
@@ -32,7 +34,10 @@
     #define MQTT_LOGIN_INPUT "Логин"
     #define MQTT_PASS_INPUT  "Пароль"
 
-    #define BTN_CONNECT "подключиться"
+    #define PIN1_INPUT  "Пин 1"
+    #define PIN2_INPUT  "Пин 2"
+    #define PIN3_INPUT  "Пин 3"
+    #define PIN4_INPUT  "Пин 4"
 #else
     #define NAME "Roller Blind"
 
@@ -40,10 +45,11 @@
     #define SLIDER_MIN_OPEN_PERCENT "Min Position"
     #define SLIDER_MAX_OPEN_PERCENT "Max Position"
 
-    #define CONTROL_PANEL       "Control Panel"
-    #define WIFI_SETTINGS_PANEL "WiFi Settings"
-    #define MQTT_SETTINGS_PANEL "MQTT Settings"
-    #define CALIBRATION_PANEL   "Calibration"
+    #define CONTROL_PANEL        "Control Panel"
+    #define WIFI_SETTINGS_PANEL  "WiFi Settings"
+    #define MQTT_SETTINGS_PANEL  "MQTT Settings"
+    #define CALIBRATION_PANEL    "Calibration"
+    #define MOTOR_SETTINGS_PANEL "Motor Settings"
 
     #define BTN_OPEN      "open"
     #define BTN_CLOSE     "close"
@@ -55,6 +61,7 @@
     #define BTN_CALIBRATE "calibrate"
     #define BTN_USER_HALL "use hall"
     #define BTN_CONNECT   "connect"
+    #define BTN_SAVE      "save"
 
     #define WIFI_SSID_INPUT "WiFi ssid"
     #define WIFI_PASS_INPUT "WiFi password"
@@ -63,6 +70,11 @@
     #define MQTT_PORT_INPUT  "MQTT port"
     #define MQTT_LOGIN_INPUT "Login"
     #define MQTT_PASS_INPUT  "Password"
+
+    #define PIN1_INPUT  "Pin 1"
+    #define PIN2_INPUT  "Pin 2"
+    #define PIN3_INPUT  "Pin 3"
+    #define PIN4_INPUT  "Pin 4"
 #endif
 
 #define DEVICES_GROUP "MyDevices"
@@ -105,7 +117,7 @@
 
 #define DELIMITER ","
 #define TABS CALIBRATION_PANEL DELIMITER CONTROL_PANEL
-#define MAIN_MENU CONTROL_PANEL DELIMITER WIFI_SETTINGS_PANEL DELIMITER MQTT_SETTINGS_PANEL
+#define MAIN_MENU CONTROL_PANEL DELIMITER WIFI_SETTINGS_PANEL DELIMITER MQTT_SETTINGS_PANEL DELIMITER MOTOR_SETTINGS_PANEL
 
 #define MOTOR_SPIN_HALL       4
 #define TOP_POSITION_HALL     5

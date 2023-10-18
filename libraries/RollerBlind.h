@@ -2,8 +2,10 @@
 #include <RollerBlindConsts.h>
 
 class RollerBlind {
+
   private:
-    GStepper<STEPPER4WIRE>* motor;
+    GStepper<STEPPER4WIRE, STEPPER_VIRTUAL>* motor;
+    HubMotorSettings* motorSettings;
 
     bool opened, position_set_manually;
     short percent_position, calibration_started_from;
@@ -24,6 +26,7 @@ class RollerBlind {
 
     void calibrated() {
       this->motor->brake();
+      this->motor->attachStep(this->step);
       this->length = this->calibration_started_from - this->getCurrent();
       this->target_position = 0;
       this->position = 0;
@@ -118,9 +121,22 @@ class RollerBlind {
       this->setTarget(int(float(this->length) * float(percent) / 100.0));
     }
 
+    static void step(byte val) {
+      digitalWrite(RollerBlind::currentMotorSettings->getPin4(), val & 1);
+      val >>= 1;
+      digitalWrite(RollerBlind::currentMotorSettings->getPin3(), val & 1);
+      val >>= 1;
+      digitalWrite(RollerBlind::currentMotorSettings->getPin2(), val & 1);
+      val >>= 1;
+      digitalWrite(RollerBlind::currentMotorSettings->getPin1(), val & 1);
+    }
+
   public:
-    RollerBlind(GStepper<STEPPER4WIRE>* motor) {
+    static HubMotorSettings* currentMotorSettings; 
+
+    RollerBlind(GStepper<STEPPER4WIRE, STEPPER_VIRTUAL>* motor, HubMotorSettings* motorSettings) {
       this->motor = motor;
+      this->motorSettings = motorSettings;
     }
 
     void setup() {
@@ -148,6 +164,7 @@ class RollerBlind {
     }
 
     void tick() {
+      RollerBlind::currentMotorSettings = this->motorSettings;
       // todo: rewrite logic
       bool hall_sensor_active = !digitalRead(TOP_POSITION_HALL);
       if (this->calibration_status == CALIBRATING) {
@@ -298,3 +315,5 @@ class RollerBlind {
       return this->opened;
     }
 };
+
+HubMotorSettings* RollerBlind::currentMotorSettings = nullptr;

@@ -1,4 +1,4 @@
-struct ShortValidator {
+struct NumberValidator {
   int min, max, def;
 };
 
@@ -23,21 +23,21 @@ class EepromSync {
     short address;
     short check_flag_address;
 
-    ShortValidator short_validator;
+    NumberValidator number_validator;
 
-    void validate(short value) {
+    void validate(int value) {
       if (!this->variable_writen) {
-        this->variable = this->short_validator.def;
+        this->variable = this->number_validator.def;
         this->save_and_commit();
-      } else if (this->short_validator.min > this->variable || this->variable > this->short_validator.max) {
-        this->variable = this->short_validator.def;
+      } else if (this->number_validator.min > this->variable || this->variable > this->number_validator.max) {
+        this->variable = this->number_validator.def;
         this->save_and_commit();
       }
     }
 
     void validate(char* value) { }
 
-    void clear(short value) {
+    void clear(int value) {
       this->variable = 0;
     }
 
@@ -57,14 +57,21 @@ class EepromSync {
       this->set_start(this->address + sizeof(this->variable));
     }
 
+    void init_with_validator() {
+      this->use_validator = true;
+      this->init();
+    }
+
     EepromSync(T& input) : variable(input) {
       this->init();
     }
 
-    EepromSync(short& input, ShortValidator validator) : variable(input) {
-      this->use_validator = true;
-      this->short_validator = validator;
-      this->init();
+    EepromSync(short& input, NumberValidator validator) : variable(input), number_validator(validator) {
+      this->init_with_validator();
+    }
+
+    EepromSync(int8_t& input, NumberValidator validator) : variable(input), number_validator(validator) {
+      this->init_with_validator();
     }
 
     void read() {
