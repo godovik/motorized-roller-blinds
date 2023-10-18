@@ -25,6 +25,11 @@ class HubMotorSettings {
       this->pin2_storage.save();
       this->pin3_storage.save();
       this->pin4_storage.save_and_commit();
+
+      pinMode(this->pin1, 1);
+      pinMode(this->pin2, 1);
+      pinMode(this->pin3, 1);
+      pinMode(this->pin4, 1);
     }
 
   public:
@@ -42,6 +47,11 @@ class HubMotorSettings {
       this->pin2_storage.read();
       this->pin3_storage.read();
       this->pin4_storage.read();
+
+      pinMode(this->pin1, 1);
+      pinMode(this->pin2, 1);
+      pinMode(this->pin3, 1);
+      pinMode(this->pin4, 1);
     }
 
     void draw() {

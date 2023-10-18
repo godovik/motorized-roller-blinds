@@ -26,7 +26,6 @@ class RollerBlind {
 
     void calibrated() {
       this->motor->brake();
-      this->motor->attachStep(this->step);
       this->length = this->calibration_started_from - this->getCurrent();
       this->target_position = 0;
       this->position = 0;
@@ -157,6 +156,8 @@ class RollerBlind {
       this->motor->setAccelerationDeg(720);
       this->motor->setCurrentDeg(this->position * this->getReversedMultiplier());
       this->motor->setTargetDeg(this->position * this->getReversedMultiplier());
+      
+      this->motor->attachStep(this->step);
     }
 
     bool useHallSensor() {
