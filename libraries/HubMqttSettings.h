@@ -64,6 +64,9 @@ class HubMqttSettings {
       Serial.print("mqtt_pass: "); Serial.println(this->mqtt_pass); 
       Serial.print("mqtt_port: "); Serial.println(this->mqtt_port); 
       // todo: проверять наличие соединений и запоминать невалидные параметры
-      this->hub->setupMQTT(this->mqtt_host, this->mqtt_port, this->mqtt_login, this->mqtt_pass);
+      if(strlen(this->mqtt_host) != 0) {
+        Serial.println("mqtt connect setupMQTT");
+        this->hub->setupMQTT(this->mqtt_host, this->mqtt_port, this->mqtt_login, this->mqtt_pass);
+      }
     }
 };
