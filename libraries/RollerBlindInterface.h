@@ -188,8 +188,8 @@ class RollerBlindInterface {
 
       this->hub->WidgetSize(33);
       this->hub->Button_(F("open"), &this->btn_open, F(BTN_OPEN));
-      this->hub->Button_(F("stop"), &this->btn_stop, F(BTN_CLOSE));
-      this->hub->Button_(F("close"), &this->btn_close, F(BTN_STOP));
+      this->hub->Button_(F("stop"), &this->btn_stop, F(BTN_STOP));
+      this->hub->Button_(F("close"), &this->btn_close, F(BTN_CLOSE));
       this->hub->EndWidgets();
 
       if (this->hub->Dummy_("opened", &this->opened, GH_INT8)) {
