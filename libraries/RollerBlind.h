@@ -7,8 +7,8 @@ class RollerBlind {
     GStepper<STEPPER4WIRE, STEPPER_VIRTUAL>* motor;
     HubMotorSettings* motorSettings;
 
-    bool opened, position_set_manually;
-    short percent_position, calibration_started_from;
+    bool opened, position_set_manually, motor_hall_status;
+    short percent_position, calibration_started_from, last_motor_hall_position;
 
     short length, position, target_position, deg_since_last_spin, percent_max_position, percent_min_position;
     EepromSync<short> length_storage               = EepromSync<short>(length);
@@ -168,6 +168,7 @@ class RollerBlind {
       RollerBlind::currentMotorSettings = this->motorSettings;
       // todo: rewrite logic
       bool hall_sensor_active = !digitalRead(TOP_POSITION_HALL);
+      bool motor_hall_sensor_active = !digitalRead(MOTOR_SPIN_HALL);
       if (this->calibration_status == CALIBRATING) {
         this->tickCalibration(hall_sensor_active);
       } else {
@@ -177,6 +178,11 @@ class RollerBlind {
           this->processNewTop();
         }
       }
+      if (this->motor_hall_status != motor_hall_sensor_active) {
+        this->motor_hall_status = motor_hall_sensor_active;
+        this->last_motor_hall_position = this->getCurrent();
+      }
+      this->deg_since_last_spin = this->last_motor_hall_position - this->getCurrent();
     }
 
     void up() {
