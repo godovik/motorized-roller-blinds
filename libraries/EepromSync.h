@@ -9,7 +9,7 @@ struct NumberValidator {
 #define VARIABLE_WRITTEN   1001
 
 // todo: переместить внутрь класса
-static short next_position = 12;
+static short next_position = EEPROM_START;
 
 template <typename T>
 class EepromSync {

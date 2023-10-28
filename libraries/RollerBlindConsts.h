@@ -79,7 +79,8 @@
 
 #define DEVICES_GROUP "MyDevices"
 
-#define EEPROM_SIZE 512
+#define EEPROM_START 128
+#define EEPROM_SIZE 640 + EEPROM_START
 
 #define CALIBRATED_NO   1000
 #define CALIBRATING     1001
